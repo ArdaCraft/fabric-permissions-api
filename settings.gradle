@@ -13,3 +13,4 @@ plugins {
 }
 
 rootProject.name = 'fabric-permissions-api'
+include 'test'

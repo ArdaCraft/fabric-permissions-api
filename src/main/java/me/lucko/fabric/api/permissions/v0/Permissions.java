@@ -26,6 +26,10 @@
 package me.lucko.fabric.api.permissions.v0;
 
 import com.mojang.authlib.GameProfile;
+import me.lucko.fabric.FabricPermissionsApi;
+import me.lucko.fabric.internal.network.PermissionPacket;
+import me.lucko.fabric.internal.network.PermissionPacketHandler;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
@@ -36,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
@@ -52,9 +57,20 @@ public interface Permissions {
      * @return the state of the permission
      */
     static @NotNull TriState getPermissionValue(@NotNull CommandSource source, @NotNull String permission) {
-        Objects.requireNonNull(source, "source");
-        Objects.requireNonNull(permission, "permission");
-        return PermissionCheckEvent.EVENT.invoker().onPermissionCheck(source, permission);
+        if (FabricPermissionsApi.ENVIRONMENT == EnvType.CLIENT) {
+            PermissionPacket.Check packet = new PermissionPacket.Check(permission);
+            CompletableFuture<TriState> future = new CompletableFuture<>();
+            PermissionPacketHandler.send(packet, future);
+            try {
+                return future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            Objects.requireNonNull(source, "source");
+            Objects.requireNonNull(permission, "permission");
+            return PermissionCheckEvent.EVENT.invoker().onPermissionCheck(source, permission);
+        }
     }
 
     /**

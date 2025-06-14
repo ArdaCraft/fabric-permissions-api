@@ -25,6 +25,8 @@
 
 package me.lucko.fabric.api.permissions.v0;
 
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -33,10 +35,13 @@ import net.minecraft.world.World;
 
 class Util {
 
-    static ServerCommandSource commandSourceFromEntity(Entity entity) {
+    static CommandSource commandSourceFromEntity(Entity entity) {
         if (entity instanceof ServerPlayerEntity player) {
             return player.getCommandSource();
+        } else if (entity instanceof ClientPlayerEntity player) {
+            return player.getCommandSource();
         }
+
         World world = entity.getWorld();
         if (world instanceof ServerWorld) {
             return entity.getCommandSource();

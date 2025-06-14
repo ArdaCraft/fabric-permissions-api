@@ -47,5 +47,4 @@ public interface PermissionCheckEvent {
     });
 
     @NotNull TriState onPermissionCheck(@NotNull CommandSource source, @NotNull String permission);
-
 }

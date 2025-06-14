@@ -5,11 +5,19 @@
   "name": "fabric-permissions-api",
   "description": "A simple permissions API for Fabric.",
   "authors": [
-    "Luck"
+    "Luck",
+    "r3signed"
   ],
   "license": "MIT",
   "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "main": [
+      "me.lucko.fabric.FabricPermissionsApi"
+    ],
+    "client": [
+      "me.lucko.fabric.FabricPermissionsApi"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.9.0",
     "fabric-api-base": "*",
