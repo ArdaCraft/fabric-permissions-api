@@ -34,12 +34,12 @@ import net.minecraft.world.World;
 class Util {
 
     static ServerCommandSource commandSourceFromEntity(Entity entity) {
-        if (entity instanceof ServerPlayerEntity) {
-            return ((ServerPlayerEntity) entity).getCommandSource();
+        if (entity instanceof ServerPlayerEntity player) {
+            return player.getCommandSource();
         }
         World world = entity.getWorld();
         if (world instanceof ServerWorld) {
-            return entity.getCommandSource((ServerWorld) world);
+            return entity.getCommandSource();
         } else {
             throw new IllegalArgumentException("Entity '" + entity + "' is not a server entity. Try passing a CommandSource directly instead.");
         }
